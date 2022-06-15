@@ -1,118 +1,119 @@
-<script setup lang="ts">
-import HelloWorld from '@/components/HelloWorld.vue'
+<template>
+  <a-table :columns="columns" :data-source="data" :pagination="pagination">
+    <template #headerCell="{ column }">
+      <template v-if="column.key === 'name'">
+        <span>
+          <smile-outlined />
+          Name
+        </span>
+      </template>
+    </template>
+
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'name'">
+        <a>
+          {{ record.name }}
+        </a>
+      </template>
+      <template v-else-if="column.key === 'tags'">
+        <span>
+          <a-tag
+            v-for="tag in record.tags"
+            :key="tag"
+            :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
+          >
+            {{ tag.toUpperCase() }}
+          </a-tag>
+        </span>
+      </template>
+      <template v-else-if="column.key === 'action'">
+        <span>
+          <a>Invite 一 {{ record.name }}</a>
+          <a-divider type="vertical" />
+          <a>Delete</a>
+          <a-divider type="vertical" />
+          <a class="ant-dropdown-link">
+            More actions
+            <down-outlined />
+          </a>
+        </span>
+      </template>
+    </template>
+  </a-table>
+</template>
+<script lang="ts">
+import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+const columns = [
+  {
+    name: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    key: 'address',
+  },
+  {
+    title: 'Tags',
+    key: 'tags',
+    dataIndex: 'tags',
+  },
+  {
+    title: 'Action',
+    key: 'action',
+  },
+];
+
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+    tags: ['nice', 'developer'],
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+    tags: ['loser'],
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+    tags: ['cool', 'teacher'],
+  },
+];
+
+export default defineComponent({
+  components: {
+    SmileOutlined,
+    DownOutlined,
+  },
+  setup() {
+      const pagination = reactive({
+    pageSize: 10,
+    current: 1,
+    total: 0,
+    showSizeChanger: true,
+    showQuickJumper: true
+  });
+    return {
+      data,
+      columns,
+      pagination
+    };
+  },
+});
 </script>
 
-<template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-      </nav>
-    </div>
-  </header>
-
-  <router-view />
-</template>
-
-<style>
-@import '@/assets/base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
